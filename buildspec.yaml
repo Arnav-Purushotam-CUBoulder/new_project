@@ -1,0 +1,32 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+    #first you need to authenticate with aws using the credentials stored on this macbook
+      - aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 324037286199.dkr.ecr.us-east-2.amazonaws.com
+  
+  build:
+    commands:
+    #now we are actually gonna execute the docker commands to build and tag our images
+    #first specify the dockerfile path, the from where to start building the image which is the current root directory
+    #as you can see the images will have the tag latest
+      - docker build -t reservations ./apps/reservations/Dockerfile .
+      - docker tag reservations:latest 324037286199.dkr.ecr.us-east-2.amazonaws.com/reservations:latest
+
+      - docker build -t auth ./apps/auth/Dockerfile .
+      - docker tag auth:latest 324037286199.dkr.ecr.us-east-2.amazonaws.com/auth:latest
+
+      - docker build -t payments ./apps/payments/Dockerfile .
+      - docker tag payments:latest 324037286199.dkr.ecr.us-east-2.amazonaws.com/payments:latest
+
+      - docker build -t notifications ./apps/notifications/Dockerfile .
+      - docker tag notifications:latest 324037286199.dkr.ecr.us-east-2.amazonaws.com/notifications:latest
+  
+  post_build:
+    commands:
+    #here in the post-build phase you have to specify the commands to push the docker image to the ECR repository
+      - docker push 324037286199.dkr.ecr.us-east-2.amazonaws.com/reservations:latest
+      - docker push 324037286199.dkr.ecr.us-east-2.amazonaws.com/auth:latest      
+      - docker push 324037286199.dkr.ecr.us-east-2.amazonaws.com/notifications:latest
+      - docker push 324037286199.dkr.ecr.us-east-2.amazonaws.com/payments:latest
