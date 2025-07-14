@@ -5,6 +5,9 @@ WORKDIR /usr/src/app
 # Copy package.json and yarn.lock for yarn
 COPY package.json ./ 
 COPY yarn.lock ./
+#here the second argument is the file/directory inside the docker container, and the first argument is the file in your pc 
+COPY tsconfig.json tsconfig.json
+COPY nest-cli.json nest-cli.json
 
 # Install Yarn globally
 RUN npm install -g yarn --force
@@ -13,10 +16,13 @@ RUN npm install -g yarn --force
 RUN yarn install
 
 # Copy the rest of the application files
-COPY . .
+#COPY . .
+#for productionizing the docker image, since we do not need all the files, just copy over what is needed
+COPY apps/reservations apps/reservations
+COPY libs libs
 
 # Build the application
-RUN yarn run build
+RUN yarn run build reservations
 
 FROM node:alpine as production
 

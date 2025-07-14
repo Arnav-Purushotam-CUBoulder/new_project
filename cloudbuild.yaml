@@ -1,0 +1,117 @@
+steps:
+# reservations
+- name: 'gcr.io/cloud-builders/docker'
+  args: [
+    'build',
+    '-t',
+    'us-central1-docker.pkg.dev/sleepr-443603/reservations/production',
+    '-f',
+    'apps/reservations/Dockerfile',
+    '.'
+  ]
+
+- name: 'gcr.io/cloud-builders/docker'
+  args: [
+    'push',
+    'us-central1-docker.pkg.dev/sleepr-443603/reservations/production'
+  ]
+
+
+
+
+# sales
+- name: 'gcr.io/cloud-builders/docker'
+  args: [
+    'build',
+    '-t',
+    'us-central1-docker.pkg.dev/sleepr-443603/sales/production',
+    '-f',
+    'apps/sales/Dockerfile',
+    '.'
+  ]
+
+- name: 'gcr.io/cloud-builders/docker'
+  args: [
+    'push',
+    'us-central1-docker.pkg.dev/sleepr-443603/sales/production'
+  ]
+
+
+
+
+
+  # inventory
+- name: 'gcr.io/cloud-builders/docker'
+  args: [
+    'build',
+    '-t',
+    'us-central1-docker.pkg.dev/sleepr-443603/inventory/production',
+    '-f',
+    'apps/inventory/Dockerfile',
+    '.'
+  ]
+
+- name: 'gcr.io/cloud-builders/docker'
+  args: [
+    'push',
+    'us-central1-docker.pkg.dev/sleepr-443603/inventory/production'
+  ]
+
+
+
+
+
+
+# auth
+- name: 'gcr.io/cloud-builders/docker'
+  args: [
+    'build',
+    '-t',
+    'us-central1-docker.pkg.dev/sleepr-443603/auth/production',
+    '-f',
+    'apps/auth/Dockerfile',
+    '.'
+  ]
+
+- name: 'gcr.io/cloud-builders/docker'
+  args: [
+    'push',
+    'us-central1-docker.pkg.dev/sleepr-443603/auth/production'
+  ]
+
+# payments
+- name: 'gcr.io/cloud-builders/docker'
+  args: [
+    'build',
+    '-t',
+    'us-central1-docker.pkg.dev/sleepr-443603/payments/production',
+    '-f',
+    'apps/payments/Dockerfile',
+    '.'
+  ]
+
+- name: 'gcr.io/cloud-builders/docker'
+  args: [
+    'push',
+    'us-central1-docker.pkg.dev/sleepr-443603/payments/production'
+  ]
+
+# notifications
+- name: 'gcr.io/cloud-builders/docker'
+  args: [
+    'build',
+    '-t',
+    'us-central1-docker.pkg.dev/sleepr-443603/notifications/production',
+    '-f',
+    'apps/notifications/Dockerfile',
+    '.'
+  ]
+
+- name: 'gcr.io/cloud-builders/docker'
+  args: [
+    'push',
+    'us-central1-docker.pkg.dev/sleepr-443603/notifications/production'
+  ]
+
+options:
+  logging: CLOUD_LOGGING_ONLY

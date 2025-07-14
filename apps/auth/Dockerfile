@@ -5,6 +5,9 @@ WORKDIR /usr/src/app
 # Copy package.json and yarn.lock for yarn
 COPY package.json ./ 
 COPY yarn.lock ./
+COPY tsconfig.json tsconfig.json
+COPY nest-cli.json nest-cli.json
+
 
 # Install Yarn globally
 RUN npm install -g yarn --force
@@ -13,10 +16,14 @@ RUN npm install -g yarn --force
 RUN yarn install
 
 # Copy the rest of the application files
-COPY . .
+COPY apps/auth apps/auth
+COPY libs libs
+
+#now install the local auth package.json, which contains just the packages seperate to the auth service, yarn install is used to install dependencies from package.json instead of yarn add
+RUN cd apps/auth && yarn install
 
 # Build the application
-RUN yarn run build
+RUN yarn run build auth
 
 FROM node:alpine as production
 

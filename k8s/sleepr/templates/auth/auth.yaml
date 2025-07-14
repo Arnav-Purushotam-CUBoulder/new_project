@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: auth
+  name: auth
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth
+  template:
+    metadata:
+      labels:
+        app: auth
+    spec:
+      containers:
+      - image: us-central1-docker.pkg.dev/sleepr-443603/auth/production
+        name: auth
+        env:
+        - name: MONGODB_URI
+          valueFrom: 
+            secretKeyRef:
+              name: mongodb
+              key: connectionString
+        - name: JWT_SECRET
+          valueFrom: 
+            secretKeyRef:
+              name: jwt
+              key: jwtSecret
+        - name: JWT_EXPIRATION
+          value: '3600'
+        - name: TCP_PORT
+          value: '3002'
+        - name: HTTP_PORT
+          value: '3003'
+        port:
+         #this auth container listens to traffic from two ports, the http port (to handle traffic from outside the cluster)
+         #and the TCP port (to handle traffic from inside the cluster), i.e. here you are specifying the container ports to be exposed by the pod
+         #the pod has to know the ports to expose, only then it can expose them, right?
+         - containerPort: 3002
+         - containerPort: 3003

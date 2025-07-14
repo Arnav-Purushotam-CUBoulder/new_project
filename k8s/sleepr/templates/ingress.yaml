@@ -1,0 +1,59 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sleepr
+spec:
+  rules:
+  #here you have to specify the http paths in our application
+   - http:
+      paths:
+         # now under the paths list, handle all the microservice paths one by one
+         # * is a wildcard here to direct all traffic that starts with 'reservations' to our reservations service
+       - path: /reservations/*
+         #ImplementationSpecific means that GKE will handle all of the routing
+         pathType: ImplementationSpecific
+         backend:
+          service:
+            #here for the name put the name of the service associated with reservations, it will be in the service.yaml file
+            #it is just reservations, if you look inside it, then provide the port number that you can access the service on
+            name: reservations
+            port:
+             number: 3004
+       - path: /sales/*
+         #ImplementationSpecific means that GKE will handle all of the routing
+         pathType: ImplementationSpecific
+         backend:
+          service:
+            #here for the name put the name of the service associated with reservations, it will be in the service.yaml file
+            #it is just sales, if you look inside it, then provide the port number that you can access the service on
+            name: sales
+            port:
+             number: 3005
+       - path: /inventory/*
+         #ImplementationSpecific means that GKE will handle all of the routing
+         pathType: ImplementationSpecific
+         backend:
+          service:
+            #here for the name put the name of the service associated with reservations, it will be in the service.yaml file
+            #it is just reservations, if you look inside it, then provide the port number that you can access the service on
+            name: inventory-http
+            port:
+             number: 3006
+       - path: /auth/*
+         pathType: ImplementationSpecific
+         backend:
+          service:
+            # as we want to direct the traffic towards the auth-http service and not the tcp-service, therefore put that particular service name itself
+            name: auth-http
+            port:
+             number: 3003
+       - path: /users/*
+         pathType: ImplementationSpecific
+         backend:
+          service:
+            # as we want to direct the traffic towards the auth-http service and not the tcp-service, therefore put that particular service name itself
+            name: auth-http
+            port:
+             number: 3003
+
+

@@ -1,0 +1,10 @@
+{
+  "name": "@sleepr/payments",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+
+  "dependencies": {
+    "stripe": "17.4.0"
+  }
+}

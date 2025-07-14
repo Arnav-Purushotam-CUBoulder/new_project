@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: payments
+  name: payments
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payments
+  template:
+    metadata:
+      labels:
+        app: payments
+    spec:
+      containers:
+      - image: us-central1-docker.pkg.dev/sleepr-443603/payments/production
+        name: payments
+        env:
+          #think of these env variables in the view of the code that is trying to access them
+          #for the code, it needs a PORT value in order to listen to (ofc this port will be of the container)
+          #think of the container like a house with ports, the code lives inside that house, and when it specifies 3001 (which it takes from the below env variables)
+          #it can access that container's port i.e. 3001, i.e. it listens to traffic on that PORT, but now traffic somehow has to be routed to this PORT
+          #(of the container), but this contianer itself is inside a pod, which is inside a cluster, (therefore the pod does the work of exposing the container's port to other agents inside the cluster)
+          #for example the payments service, now this payments service acts as a front to access the pod which acts as a front to access the container
+          #now the traffic to the payments service comes from the load balancer/ingress which in itself acts as a front to access the payments_service
+          #the load balancer is the entry point to our application, all external data outside the cluster has to come through the load balancer
+          #therefore traffic flow occurs like this :: --->load_balancer/ingress ---> specific K8s service ---> specific K8s pod ---> container_inside_that_pod --> code inside the container
+          #The PORT environment variable is strictly for the application inside the container to know which port to listen on.
+          #The Kubernetes ecosystem (Pod, Service, Ingress) ensures that traffic is correctly routed to that container and port.
+        - name: PORT
+          value: "3001"
+          #here the value of the NOTIFICATIONS_HOST env variable is notifications, because that is the name of the service we created
+          #remember this method to establish communications between pods
+        - name: NOTIFICATIONS_HOST
+          value: notifications
+        - name: NOTIFICATIONS_PORT
+          value: "3000"
+        - name: STRIPE_SECRET_KEY
+          valueFrom: 
+            secretKeyRef:
+              name: stripe
+              key: apiKey
+        ports:
+         - containerPort: 3001
+

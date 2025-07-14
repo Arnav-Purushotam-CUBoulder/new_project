@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: inventory
+  name: inventory
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: inventory
+  template:
+    metadata:
+      labels:
+        app: inventory
+    spec:
+      containers:
+      - image: us-central1-docker.pkg.dev/sleepr-443603/inventory/production
+        name: inventory
+        env:
+        - name: MONGODB_URI
+          valueFrom: 
+            secretKeyRef:
+              name: mongodb
+              key: connectionString
+        - name: PORT
+          value: '3006'
+        - name: TCP_PORT
+          value: '3007'
+        - name: AUTH_HOST
+        #put the name of the auth service here
+          value: auth-tcp 
+        - name: AUTH_PORT
+          value: '3002'
+        - name: PAYMENTS_HOST
+          value: payments
+        - name: PAYMENTS_PORT
+          value: '3001'
+        ports:
+         - containerPort: 3006
+         - containerPort: 3007
+            

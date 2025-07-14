@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: sales
+  name: sales
+spec:
+  ports:
+  - name: "http"
+    port: 3005
+    #the protocol here is TCP because inside the cluster all communication occurs via TCP
+    #i.e. this service communicates with its pod via TCP (i.e. it routes the traffic from its port 3004 to the port 3004 on the pod using TCP)
+    protocol: TCP
+    targetPort: 3005
+  selector:
+    app: sales
+  type: NodePort
+

@@ -35,6 +35,26 @@ lerna-debug.log*
 !.vscode/launch.json
 !.vscode/extensions.json
 
+#ignore the sleepr-443603-df33c44473c0.json file in the k8s/sleepr folder as it contains secrets
+k8s/sleepr/sleepr-443603-df33c44473c0.json
+
+# Ignore .env file for payments microservice
+#also ignore .env of the notifications microservice, as it contains google oauth secrets
+apps/payments/.env
+apps/notifications/.env
+
+#explicitly unignore the required .env files:
+!apps/auth/.env
+!apps/reservations/.env
+
+
+# # dotenv environment variable files
+# .env
+# .env.development.local
+# .env.test.local
+# .env.production.local
+# .env.local
+
 # temp directory
 .temp
 .tmp

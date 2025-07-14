@@ -1,20 +1,32 @@
-import { Type } from 'class-transformer';
-import { IsDate, IsNotEmpty, IsString } from 'class-validator';
+import { Type } from "class-transformer";
+import { IsDate, IsDefined, IsNotEmpty, IsNotEmptyObject, IsNumber, IsString, ValidateNested } from "class-validator";
+import { CreateChargeDto } from "@app/common";
 
-export class CreateReservationDto {
-  @IsDate()
-  @Type(() => Date)
-  startDate: Date;
+export class CreateReservationDto{
 
-  @IsDate()
-  @Type(() => Date)
-  endDate: Date;
+    @IsDate()
+    @Type(() => Date)
+    startDate: Date;
 
-  @IsString()
-  @IsNotEmpty()
-  placeId: string;
+    @IsDate()
+    @Type(() => Date)
+    endDate: Date;
 
-  @IsString()
-  @IsNotEmpty()
-  invoiceId: string;
+    //place if also removed as it is not being used
+    // @IsString()
+    // @IsNotEmpty()
+    // placeId: string;
+
+    //removing user supplied invoice id here, as the invoice id has to be based on the stripe transaction
+    // @IsString()
+    // @IsNotEmpty()
+    // invoiceId: string;
+
+    @IsDefined()
+    @IsNotEmptyObject()
+    @ValidateNested()
+    //type decorator in order to turn that object which we got into the type we want
+    @Type(() => CreateChargeDto)
+    charge: CreateChargeDto
+
 }

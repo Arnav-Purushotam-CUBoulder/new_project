@@ -10,12 +10,14 @@ services:
     env_file:
       - ./apps/reservations/.env
     ports:
-      - '3000:3000'
+      - '3004:3004'
     volumes:
       - .:/usr/src/app
     environment:
       - NODE_ENV=development
       - CHOKIDAR_USEPOLLING=true  # Improves file watching in Docker
+    depends_on:
+      - mongo
 
   auth:
     build:
@@ -26,12 +28,91 @@ services:
     env_file:
       - ./apps/auth/.env
     ports:
-      - '3001:3001'
+      - '3003:3003'
     volumes:
       - .:/usr/src/app
     environment:
       - NODE_ENV=development
       - CHOKIDAR_USEPOLLING=true  # Improves file watching in Docker
+    depends_on:
+      - mongo
+
+  payments:
+    build:
+      context: .
+      dockerfile: ./apps/payments/Dockerfile
+      target: development
+    command: yarn start:dev payments
+    env_file:
+      - ./apps/payments/.env
+    volumes:
+      - .:/usr/src/app
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true  # Improves file watching in Docker
+    depends_on:
+      - mongo
+
+  notifications:
+    build:
+      context: .
+      dockerfile: ./apps/notifications/Dockerfile
+      target: development
+    command: yarn start:dev notifications
+    env_file:
+      - ./apps/notifications/.env
+    volumes:
+      - .:/usr/src/app
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true  # Improves file watching in Docker
+    depends_on:
+      - mongo
+
+  sales:
+    build:
+      context: .
+      dockerfile: ./apps/sales/Dockerfile
+      target: development
+    command: yarn start:dev sales
+    env_file:
+      - ./apps/sales/.env
+    ports:
+      - '3005:3005'
+    volumes:
+      - .:/usr/src/app
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true  # Improves file watching in Docker
+    depends_on:
+      - mongo
+
+
+
+  inventory:
+    build:
+      context: .
+      dockerfile: ./apps/inventory/Dockerfile
+      target: development
+    command: yarn start:dev inventory
+    env_file:
+      - ./apps/inventory/.env
+    ports:
+      - '3006:3006'
+    volumes:
+      - .:/usr/src/app
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true  # Improves file watching in Docker
+    depends_on:
+      - mongo
+
+
+
+
+
 
   mongo:
     image: mongo
+    ports:
+      - '27017:27017'
