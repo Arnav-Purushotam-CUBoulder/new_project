@@ -102,7 +102,7 @@
 2. **Clone & Bootstrap**
 
    ```bash
-   git clone https://github.com/<your‑gh>/sleepr.git
+   git clone git@github.com:Arnav-Purushotam-CUBoulder/new_project.git
    cd sleepr
    pnpm install                 # root + workspaces
    cp .env.sample apps/*/.env   # customise each service
